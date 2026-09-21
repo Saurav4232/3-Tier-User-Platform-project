@@ -117,7 +117,102 @@ jobs:
           path: checkov-dockerfile-report.json
           if-no-files-found: warn
 
+  client-trivy-fs:
+    name: Client Trivy FS Scan
+    runs-on: ubuntu-latest
+    needs: gitleaks-scan
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v7
+        with:
+          ref: qa
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@e07451d2e059ed86c2870430ea286b3a9e0bf241
+        with:
+          version: v0.68.2
+          cache: true
+      - name: Verify Trivy Installation
+        run: |
+          trivy --version 
+          which trivy
+
+      - name: Run Trivy FS Scan on Client (JSON)
+        run: |
+          trivy fs ./client \
+            --format json \
+            --output client-trivy-fs-report.json \
+            --severity HIGH_CRITICAL \
+            --ignore-unfixed \
+            --ext-code 0
+
+      - name: Run Trivy FS scan on Client (TABLE)
+        run: |
+          trivy fs ./client \
+            --format table \
+            --severity HIGH_CRITICAL \
+            --ignore-unfixed \
+            --exit-code 0 > client-trivy-fs-report.txt
+      - name: Upload Client Trivy Json report
+        uses: actions/upload-artifact@v7
+        with: 
+          name: client-trivy-fs-Json-report
+          path: client-trivy-fs-report.json
+          if-no-files-found: warn
+      - name: Upload Server Trivy table report
+        uses: actions/upload-artifact@v7
+        with: 
+          name: client-trivy-fs-table-report
+          path: client-trivy-fs-report.txt
+          if-no-files-found: warn
+
+  server-trivy-fs:
+    name: Server Trivy FS Scan
+    runs-on: ubuntu-latest
+    needs: gitleaks-scan
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v7
+        with:
+          ref: qa
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@e07451d2e059ed86c2870430ea286b3a9e0bf241
+        with:
+          version: v0.68.2
+          cache: true
+      - name: Verify the Trivy Installation
+        run: |
+          trivy --version
+          which trivy
+
+      - name: Run trivy fs scan on server (Json)
+        run: |
+          trivy fs ./server \
+            --format json \
+            --output server-trivy-fs-report.json \
+            --severity HIGH_CRITICAL \
+            --ignore-unfixed \
+            --exit-code 0
+
+      - name: Run trivy fs scan on server (table)
+        run: |
+           trivy fs ./server \
+             --format table \
+             --severity HIGH_CRITICAL \
+             --ignore-unfixed \
+             --exit-code > server-trivy-fs-report.txt
+      - name: Upload Server Trivy Json report
+        uses: actions/upload-artifact@v7
+        with: 
+          name: server-trivy-fs-json-report
+          path: server-trivy-fs-report.json
+          if-no-files-found: warn
           
+      - name: Upload Server Trivy table report
+        uses: actions/upload-artifact@v7
+        with: 
+          name: server-trivy-fs-table-report
+          path: server-trivy-fs-report.txt
+          if-no-files-found: warn        
           
 
 
