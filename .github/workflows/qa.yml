@@ -142,7 +142,7 @@ jobs:
             --output client-trivy-fs-report.json \
             --severity HIGH_CRITICAL \
             --ignore-unfixed \
-            --ext-code 0
+            --exit-code 0
 
       - name: Run Trivy FS scan on Client (TABLE)
         run: |
@@ -198,7 +198,7 @@ jobs:
              --format table \
              --severity HIGH_CRITICAL \
              --ignore-unfixed \
-             --exit-code > server-trivy-fs-report.txt
+             --exit-code 0 > server-trivy-fs-report.txt
       - name: Upload Server Trivy Json report
         uses: actions/upload-artifact@v7
         with: 
