@@ -235,14 +235,14 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Setup node js
-        uses: actions/setup-node@7
+        uses: actions/setup-node@v7
         with:
           node-version: 18
           cache: npm
           cache-dependency-path: client/package-lock.json
           
       - name: Install Server Dependency
-        run: npm cli
+        run: npm ci
 
       - name: Run Client Lint
         run: npm run list --if-present
@@ -272,7 +272,7 @@ jobs:
           cache-dependency-path: client/package-lock.json
 
       - name: Install dependency
-        run: npm cli
+        run: npm ci
 
       - name: Run Server Lint
         run: npm run list --if-present
